@@ -5,12 +5,13 @@ SCOPE = [
     "https://www.googleapis.com/auth/spreadsheets",
     "https://www.googleapis.com/auth/drive.file",
     "https://www.googleapis.com/auth/drive"
-    ]
+]
 
 CREDS = Credentials.from_service_account_file('creds.json')
 SCOPED_CREDS = CREDS.with_scopes(SCOPE)
-GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS) 
+GSPREAD_CLIENT = gspread.authorize(SCOPED_CREDS)
 SHEET = GSPREAD_CLIENT.open('love_sandwiches')
+
 
 def get_sales_data():
     """
@@ -20,7 +21,26 @@ def get_sales_data():
     print("Data should be six numbers, seperated by a comma.")
     print("Example: 10,20,30,40,50,60\n")
 
-    data_str = input("Entet your data here: ")
-    print(f"The data provided is {data_str}")
+    data_str = input("Enter your data here: ")
+    sales_data = data_str.split(",")
+    validate_data(sales_data)
+
+
+def validate_data(values):
+    """
+    inside the try, converts all strinf values to integers.
+    Raises valueError if strings cannot be convertes into int,
+    or if there aren't exactly six values.
+    """
+    try:
+        if len(values) != 6:
+            raise ValueError(
+                f"exactly 6 values required, you provided {len(values)}"
+            )
+    except ValueError as e:
+        print(f"Invalid data: {e}, please try again.\n")
+
+    print(values)
+
 
 get_sales_data()
